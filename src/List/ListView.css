@@ -1,0 +1,29 @@
+.servers-list {
+    border: 1px solid #9094939d;
+    border-collapse: collapse;
+    text-align: left;
+    margin-bottom: 15px;
+    font-size: 13px;
+    width: 100%;
+}
+
+.servers-list th, .servers-list td {
+    padding: 5px 20px 5px 15px;
+}
+
+.servers-list th {
+    background-color: #39e28d65;
+}
+.servers-list tr:nth-child(even) {
+    background-color: #ced3d179;
+}
+
+caption {
+    font-size: smaller;
+    text-align: right;
+    padding-bottom: 5px;
+}
+
+.clickable-text {
+    text-decoration-line: underline;
+}
