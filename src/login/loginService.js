@@ -1,5 +1,4 @@
-// http POST request to login
-async function login(loginData) {
+export async function login(loginData) {
   const url = 'https://playground.tesonet.lt/v1/tokens';
   try {
     const response = await fetch(url, {
@@ -20,8 +19,7 @@ async function login(loginData) {
 };
 
 
-// http GET request to fech data
-async function getData(token) {
+export async function getData(token) {
   const url = 'https://playground.tesonet.lt/v1/servers';
   try {
     const response = await fetch(url, {
@@ -38,9 +36,4 @@ async function getData(token) {
   } catch (error) {
     window.alert('Error!');
   }
-};
-
-export {
-  login,
-  getData
 };
