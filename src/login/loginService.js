@@ -12,33 +12,35 @@ async function login(loginData) {
     if (response.ok) {
       const jsonresponse = await response.json();
       return jsonresponse;
-    } 
+    }
     throw new Error('Request failed!');
+  } catch (error) {
+    window.alert('Error!');
   }
-  catch(error) {
-    window.alert('Error! ');
-  }
-};
-  
-// http GET request to fech data
-async function getData(token) {
-    const url = 'https://playground.tesonet.lt/v1/servers';
-    try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`
-            },
-          });
-        if (response.ok) {
-            const jsonresponse = await response.json();
-            return jsonresponse;
-        }
-        throw new Error('Request failed!');
-    }
-    catch(error) {
-        window.alert('Error!');
-    }
 };
 
-export {login, getData};
+
+// http GET request to fech data
+async function getData(token) {
+  const url = 'https://playground.tesonet.lt/v1/servers';
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+    });
+    if (response.ok) {
+      const jsonresponse = await response.json();
+      return jsonresponse;
+    }
+    throw new Error('Request failed!');
+  } catch (error) {
+    window.alert('Error!');
+  }
+};
+
+export {
+  login,
+  getData
+};

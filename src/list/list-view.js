@@ -1,6 +1,44 @@
 import React from 'react';
 import './list-view.css';
 import { getData } from '../login/loginService';
+//import { ReactComponent as Triangle } from '../images/triangleup.svg';
+
+const getKeys = (props) => {
+    const keys = Object.keys(props);
+    return keys;
+};
+
+const GetHeader = (props) => {
+  const keys = getKeys(props.data);
+  return keys.map((key) => {
+    if (key === 'name') {
+      return <th key={key} onClick={props.clickedName}>{key.toUpperCase()}</th>;
+    }
+    if (key === 'distance') {
+      return <th key={key} onClick={props.clickedDistance}>{key.toUpperCase()}</th>;
+    }
+    return <th key={key}>{key.toUpperCase()}</th>
+  });
+};
+
+const getRowsData = (props) => {
+  const data = props;
+  return data.map((item) => {
+    const col = getKeys(item);
+  //  console.log(item); // {name: "Latvia #60", distance: 952}
+      return (
+        <tr key={item.name}>
+          {col.map((val) => {
+        //    console.log(val); // name, distance
+        //    console.log(item[col[index]]); // kaip iššifruoti? Kodėl jis === (item[val])
+        //    console.log(item[val]); // Latvia #60, 952
+          
+            return <td key={val}>{item[val]}</td>
+          })}
+        </tr>
+      );
+    })
+  }
 
 class Table extends React.Component {
   constructor(props){
@@ -11,11 +49,11 @@ class Table extends React.Component {
       distanceOrderAsc: false
     }
 
-    this.getKeys = this.getKeys.bind(this);
-    this.getHeader = this.getHeader.bind(this);
-    this.getRowsData = this.getRowsData.bind(this);
-    this.setSortedByName = this.setSortedByName.bind(this);
-    this.setSortedByDistance = this.setSortedByDistance.bind(this);
+ //   this.getKeys = this.getKeys.bind(this);
+ //   this.getHeader = this.getHeader.bind(this);
+  //  this.getRowsData = this.getRowsData.bind(this);
+    this.setSortingByName = this.setSortingByName.bind(this);
+    this.setSortingByDistance = this.setSortingByDistance.bind(this);
   }
 
   async componentDidMount() {
@@ -24,31 +62,33 @@ class Table extends React.Component {
     this.setState({ servers: data });
   }
 
-  getKeys() {
-    const keys = Object.keys(this.state.servers[0]);
-    return keys;
-  }
+  // getKeys() {
+  //   const keys = Object.keys(this.state.servers[0]);
+  //   return keys;
+  // }
   
-  getHeader() {
-    const keys = this.getKeys();
-    return keys.map((key, index) => {
-      return <th key={key+index}>{key.toUpperCase()}</th>;
-    });
-  }
+  // getHeader() {
+  //   const keys = getKeys(this.state.servers[0]);
+  //   return keys.map((key, index) => {
+  //     return <th key={key+index}>{key.toUpperCase()}</th>;
+  //   });
+  // }
 
-  getRowsData() {
-    const data = this.state.servers;
-    return data.map((item, index) => {
-      return (
-        <tr key={index+item}>
-            <td>{item.name}</td>
-            <td>{item.distance}</td>
-        </tr>
-      );
-    })
-  }
+  // getRowsData() {
+  //   const data = this.state.servers;
+  //   return data.map((item, index) => {
+  //     const col = Object.keys(item)
+  //       return (
+  //         <tr key={index+item}>
+  //           {col.map((val, index) => {
+  //             return <td key={index+item}>{item[col[index]]}</td>
+  //           })}
+  //         </tr>
+  //       );
+  //   })
+  // }
 
-  setSortedByName() {
+  setSortingByName() {
     const dataCopy = [...this.state.servers];
     dataCopy.sort((a, b) => {
       const nameA = a.name.toUpperCase();
@@ -82,8 +122,7 @@ class Table extends React.Component {
     );
   }
 
-  setSortedByDistance() {
-   // console.log(this.state.distanceOrderAsc);
+  setSortingByDistance() {
     const dataCopy = [...this.state.servers];
     dataCopy.sort((a, b) => {
       if (!this.state.distanceOrderAsc) {
@@ -106,21 +145,24 @@ class Table extends React.Component {
   render() {
     if (!this.state.servers.length) {
       return (
-      <div>Loading...</div>
+        <div>Loading...</div>
       );
     } else {
       return (
           <div>
           <h3>A List of Servers</h3>
-            <table className='servers-list' border='1'>
-            <caption className='caption'>Sort by: <span className='clickable-text' onClick={this.setSortedByName}>name</span> | <span className='clickable-text' onClick={this.setSortedByDistance}>distance</span></caption>
+            <table className='servers-table' border='1'>
+            <caption className='caption'>Click on collumn header to sort data</caption>
               <thead>
                 <tr>
-                  {this.getHeader()}
+                  <GetHeader 
+                    data={this.state.servers[0]} 
+                    clickedName={this.setSortingByName} 
+                    clickedDistance={this.setSortingByDistance} />
                 </tr>
               </thead>
               <tbody>
-                {this.getRowsData()}
+                {getRowsData(this.state.servers)}
               </tbody>
             </table>
           </div>

@@ -1,4 +1,4 @@
-.servers-list {
+.servers-table {
     border: 1px solid #9094939d;
     border-collapse: collapse;
     text-align: left;
@@ -7,14 +7,15 @@
     width: 100%;
 }
 
-.servers-list th, .servers-list td {
+.servers-table th, .servers-table td {
     padding: 5px 20px 5px 15px;
 }
 
-.servers-list th {
+.servers-table th {
     background-color: #39e28d65;
+    cursor: pointer;
 }
-.servers-list tr:nth-child(even) {
+.servers-table tr:nth-child(even) {
     background-color: #ced3d179;
 }
 
