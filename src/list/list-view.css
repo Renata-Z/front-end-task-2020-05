@@ -28,3 +28,7 @@
 .clickable-text {
     text-decoration-line: underline;
 }
+
+.rotate {
+    transform: rotate(180deg);
+}

@@ -44,6 +44,7 @@ export class LoginWindow extends React.Component {
     this.state = {
       username: '',
       password: '',
+      errMessage: null
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -62,15 +63,20 @@ export class LoginWindow extends React.Component {
       username: this.state.username,
       password: this.state.password
     };
-    const tokenObject = await login(loginData);
-    const token = tokenObject.token;
-    this.props.onLogin(token);
+    try {
+      const tokenObject = await login(loginData);
+      const token = tokenObject.token;
+      this.props.onLogin(token);
+    } catch(error) {
+      this.setState( {errMessage: error.message} );
+    }
   }
 
   loginForm() {
     return ( 
       <div className='login-container'>
         <Image src={logo} alt='logo' />
+        <p className='error-message'>{this.state.errMessage && this.state.errMessage}</p> 
         <form onSubmit = {this.handleSubmit}>
           <UsernameInput 
             name = 'username'

@@ -1,7 +1,7 @@
 
 .login-container {
     width: 279px;
-    height: 279px;
+    min-height: 280px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,6 +17,14 @@
     margin: 1px 0px 0px 0px;
   }
   
+  .error-message {
+    font-size: 13px;
+    font-style: italic;
+    color: red;
+    margin-top: 0px;
+    margin-bottom: 18px; 
+  }
+
   .input-field {
     width: 210px;
     height: 26px;
@@ -27,7 +35,7 @@
   }
   
   .button-submit {
-    margin: 0px;
+    margin: 0px 0px 25px 0px;
     background-color: white;
     height: 35px;
     width: 78px;

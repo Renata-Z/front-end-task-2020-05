@@ -11,13 +11,14 @@ const getKeys = (props) => {
 const Header = (props) => {
 	const keys = getKeys(props.data);
 	return keys.map((key) => {
-		if (key === 'name') {
-			return <th key={key} onClick={props.clickedName}>{key.toUpperCase()}</th>;
-		}
-		if (key === 'distance') {
-			return <th key={key} onClick={props.clickedDistance}>{key.toUpperCase()}</th>;
-		}
-		return <th key={key}> {key.toUpperCase()}</th>
+		return (
+			<th 
+				key={key} 
+				onClick={() => props.onSort(key)}>
+				{key.toUpperCase()}
+				{/* {props[`${key}SortAsc`] ? (<span>⏷</span>) : (<span className='rotate'>⏷</span>)} */}
+			</th>)
+
 	});
 };
 
@@ -27,13 +28,13 @@ const getRowsData = (props) => {
 		const col = getKeys(item);
 		return (
 			<tr key={item.name + item.distance}>{col.map((val) => {	
-				return <td key = {val}>{item[val]}</td>
+				return <td key = {val}>{item[val]}</td>;
 				})
 			}
 			</tr>
 		);
 	})
-}
+};
 
 export class Table extends React.Component {
 	constructor(props) {
@@ -41,11 +42,8 @@ export class Table extends React.Component {
 		this.state = {
 			servers: [],
 			nameSortAsc: false,
-			distanceSortAsc: false
+			distanceSortAsc: false,
 		}
-
-		this.setSortingByName = this.setSortingByName.bind(this);
-		this.setSortingByDistance = this.setSortingByDistance.bind(this);
 	}
 
 	async componentDidMount() {
@@ -56,49 +54,20 @@ export class Table extends React.Component {
 		});
 	}
 
-	setSortingByName() {
+	sortServers(key) {
+		const sortFunction = {
+			name: (a, b) => a.name.localeCompare(b.name),
+			distance: (a, b) => a.distance - b.distance
+		}
 		const dataCopy = [...this.state.servers];
-		const sortAsc = this.state.nameSortAsc;
-		dataCopy.sort((a, b) => {
-			const nameA = a.name.toUpperCase();
-			const nameB = b.name.toUpperCase();
-			if (!sortAsc) {
-				if (nameA < nameB) {
-					return -1;
-				}
-				if (nameA > nameB) {
-					return 1;
-				}
-				return 0;
-			} else {
-				if (nameA < nameB) {
-					return 1;
-				}
-				if (nameA > nameB) {
-					return -1;
-				}
-				return 0;
-			}
-		});
+		const sortAsc = this.state[`${key}SortAsc`];
+		dataCopy.sort(sortFunction[key]);
+		if (sortAsc) {
+			dataCopy.reverse();
+		}
 		this.setState({
 			servers: dataCopy,
-			nameSortAsc: !sortAsc
-		});
-	}
-
-	setSortingByDistance() {
-		const dataCopy = [...this.state.servers];
-		const sortAsc = this.state.distanceSortAsc;
-		dataCopy.sort((a, b) => {
-			if (!sortAsc) {
-				return a.distance - b.distance;
-			} else {
-				return b.distance - a.distance;
-			}
-		});
-		this.setState({
-			servers: dataCopy,
-			distanceSortAsc: !sortAsc
+			[`${key}SortAsc`]: !sortAsc
 		});
 	}
 
@@ -115,8 +84,8 @@ export class Table extends React.Component {
 								<tr>
 									<Header 
 										data={this.state.servers[0]}
-										clickedName={this.setSortingByName}
-										clickedDistance={this.setSortingByDistance}/> 
+										onSort={(key) => this.sortServers(key)}
+										/> 
 								</tr>
 							</thead> 
 							<tbody>

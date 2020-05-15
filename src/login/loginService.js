@@ -13,8 +13,8 @@ export async function login(loginData) {
       return jsonresponse;
     }
     throw new Error('Request failed!');
-  } catch (error) {
-    window.alert('Error!');
+  } catch(error) {
+      window.alert(error.message);
   }
 };
 
@@ -34,6 +34,6 @@ export async function getData(token) {
     }
     throw new Error('Request failed!');
   } catch (error) {
-    window.alert('Error!');
+      window.alert('Error!');
   }
 };
