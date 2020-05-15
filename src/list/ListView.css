@@ -1,0 +1,30 @@
+.servers-table {
+    border: 1px solid #9094939d;
+    border-collapse: collapse;
+    text-align: left;
+    margin-bottom: 15px;
+    font-size: 13px;
+    width: 100%;
+}
+
+.servers-table th, .servers-table td {
+    padding: 5px 20px 5px 15px;
+}
+
+.servers-table th {
+    background-color: #39e28d65;
+    cursor: pointer;
+}
+.servers-table tr:nth-child(even) {
+    background-color: #ced3d179;
+}
+
+.caption {
+    font-size: smaller;
+    text-align: right;
+    padding-bottom: 5px;
+}
+
+.rotate {
+    transform: rotate(180deg);
+}

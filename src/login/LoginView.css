@@ -19,8 +19,8 @@
   
   .error-message {
     font-size: 13px;
-    font-style: italic;
-    color: red;
+    /* font-style: italic; */
+    color: rgb(228, 64, 15);
     margin-top: 0px;
     margin-bottom: 18px; 
   }

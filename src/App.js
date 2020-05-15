@@ -1,6 +1,6 @@
 import React from 'react';
 import { LoginWindow } from './login/loginView';
-import { Table } from './list/list-view';
+import { Table } from './list/ListView';
 import './App.css';
 
 class App extends React.Component {
