@@ -1,6 +1,6 @@
 import React from "react";
 import "./ListView.css";
-import { getData } from "../login/loginService";
+import { getData } from "../login/tesonetAPI";
 
 const getKeys = (props) => {
   const keys = Object.keys(props);

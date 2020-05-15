@@ -1,58 +1,22 @@
 import React from "react";
-import "./loginView.css";
+import "./LoginView.css";
 import logo from "../images/logo.png";
-import { login } from "./loginService";
-
-const Image = (props) => {
-  return <img className="image" src={props.src} alt={props.alt} />;
-};
-
-const UsernameInput = (props) => {
-  return (
-    <input
-      className="input-field"
-      type="text"
-      placeholder="Username"
-      required
-      autoComplete="on"
-      {...props}
-    />
-  );
-};
-
-const PasswordInput = (props) => {
-  return (
-    <input
-      className="input-field"
-      type="password"
-      placeholder="Password"
-      required
-      autoComplete="off"
-      {...props}
-    />
-  );
-};
+import { login } from "./tesonetAPI";
 
 export class LoginWindow extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: "",
-      password: "",
-      errMessage: null,
-    };
+  state = {
+    username: "",
+    password: "",
+    errMessage: null,
+  };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(e) {
+  handleChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
     });
-  }
+  };
 
-  async handleSubmit(e) {
+  handleSubmit = async (e) => {
     e.preventDefault();
     const loginData = {
       username: this.state.username,
@@ -63,9 +27,11 @@ export class LoginWindow extends React.Component {
       const token = tokenObject.token;
       this.props.onLogin(token);
     } catch (error) {
-      this.setState({ errMessage: error.message });
+      this.setState({
+        errMessage: error.message,
+      });
     }
-  }
+  };
 
   loginForm() {
     return (
@@ -75,12 +41,23 @@ export class LoginWindow extends React.Component {
           {this.state.errMessage && this.state.errMessage}
         </p>
         <form onSubmit={this.handleSubmit}>
-          <UsernameInput
+          <input
+            className="input-field"
+            type="text"
+            placeholder="Username"
+            required
+            autoFocus
+            autoComplete="on"
             name="username"
             value={this.state.username}
             onChange={this.handleChange}
           />
-          <PasswordInput
+          <input
+            className="input-field"
+            type="password"
+            placeholder="Password"
+            required
+            autoComplete="off"
             name="password"
             value={this.state.password}
             onChange={this.handleChange}
@@ -94,4 +71,4 @@ export class LoginWindow extends React.Component {
   render() {
     return this.loginForm();
   }
-}
+};

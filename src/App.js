@@ -1,5 +1,5 @@
 import React from 'react';
-import { LoginWindow } from './login/loginView';
+import { LoginWindow } from './login/LoginView';
 import { Table } from './list/ListView';
 import './App.css';
 

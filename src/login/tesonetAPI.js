@@ -7,15 +7,15 @@ export async function login(loginData) {
     },
     body: JSON.stringify(loginData),
   });
+  if (response.status === 401) {
+    throw new Error("Check username and password! Doesn't look like it exists!");
+  }
   if (response.ok) {
     const jsonresponse = await response.json();
     return jsonresponse;
   }
-  if (response.status === 401) {
-    throw new Error("Invalid password / username");
-  }
-  throw new Error("Request failed! Please try again later.");
-}
+  throw new Error("Problems occurred! Please try again later.");
+};
 
 export async function getData(token) {
   const url = "https://playground.tesonet.lt/v1/servers";
@@ -30,7 +30,7 @@ export async function getData(token) {
       const jsonresponse = await response.json();
       return jsonresponse;
     }
-    throw new Error("Request failed!");
+    throw new Error("Some problems occurred! Please try again later.");
   } catch (error) {
     window.alert("Error!");
   }
