@@ -23,12 +23,12 @@ const getRowsData = (props) => {
 
 export class Table extends React.Component {
   state = {
-      servers: [],
-      nameSortAsc: false,
-      distanceSortAsc: false,
-      errMessage: null,
-  }
-  
+    servers: [],
+    nameSortAsc: false,
+    distanceSortAsc: false,
+    errMessage: null,
+  };
+
   async componentDidMount() {
     const token = this.props.token;
     try {
@@ -36,8 +36,7 @@ export class Table extends React.Component {
       this.setState({
         servers: data,
       });
-    }
-    catch (error) {
+    } catch (error) {
       this.setState({
         errMessage: error.message,
       });
@@ -46,15 +45,15 @@ export class Table extends React.Component {
 
   header = () => {
     const keys = getKeys(this.state.servers[0]);
+    let classes = null;
     return keys.map((key) => {
+      if (this.state[`${key}SortAsc`]) {
+        classes = "rotate";
+      };
       return (
         <th key={key} onClick={() => this.sortServers(key)}>
           {key.toUpperCase()}
-          {this.state[`${key}SortAsc`] ? (
-            <span className="rotate">⏷</span>
-          ) : (
-            <span>⏷</span>
-          )}
+          <span className={classes}>⏷</span>
         </th>
       );
     });
@@ -81,12 +80,15 @@ export class Table extends React.Component {
     if (!this.state.servers.length) {
       return (
         <React.Fragment>
-          {!this.state.errMessage && <div className="loading-message">Loading...</div>}
-          {this.state.errMessage && <div className="list-error-message">{this.state.errMessage}</div>}
+          {!this.state.errMessage && (
+            <div className="loading-message">Loading...</div>
+          )}
+          {this.state.errMessage && (
+            <div className="list-error-message">{this.state.errMessage}</div>
+          )}
         </React.Fragment>
-      )
-    }
-      else {
+      );
+    } else {
       return (
         <div className="content-center">
           <h3>A List of Servers</h3>
@@ -103,4 +105,4 @@ export class Table extends React.Component {
       );
     }
   }
-};
+}

@@ -18,7 +18,7 @@ export const login = async (loginData) => {
 };
 
 export const getServers = async (token) => {
-  const url = "https://playground.tesonet.lt/v1/servers/";
+  const url = "https://playground.tesonet.lt/v1/servers";
   const response = await fetch(url, {
     method: "GET",
     headers: {
