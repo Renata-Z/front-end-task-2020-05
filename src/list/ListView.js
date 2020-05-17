@@ -1,22 +1,10 @@
 import React from "react";
 import "./ListView.css";
-import { getData } from "../login/tesonetAPI";
+import { getServers } from "../login/tesonetAPI";
 
 const getKeys = (props) => {
   const keys = Object.keys(props);
   return keys;
-};
-
-const Header = (props) => {
-  const keys = getKeys(props.data);
-  return keys.map((key) => {
-    return (
-      <th key={key} onClick={() => props.onSort(key)}>
-        {key.toUpperCase()}
-        {/* {props[`${key}SortAsc`] ? (<span>⏷</span>) : (<span className='rotate'>⏷</span>)} */}
-      </th>
-    );
-  });
 };
 
 const getRowsData = (props) => {
@@ -34,22 +22,43 @@ const getRowsData = (props) => {
 };
 
 export class Table extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+  state = {
       servers: [],
       nameSortAsc: false,
       distanceSortAsc: false,
-    };
+      errMessage: null,
   }
-
+  
   async componentDidMount() {
     const token = this.props.token;
-    const data = await getData(token);
-    this.setState({
-      servers: data,
-    });
+    try {
+      const data = await getServers(token);
+      this.setState({
+        servers: data,
+      });
+    }
+    catch (error) {
+      this.setState({
+        errMessage: error.message,
+      });
+    }
   }
+
+  header = () => {
+    const keys = getKeys(this.state.servers[0]);
+    return keys.map((key) => {
+      return (
+        <th key={key} onClick={() => this.sortServers(key)}>
+          {key.toUpperCase()}
+          {this.state[`${key}SortAsc`] ? (
+            <span className="rotate">⏷</span>
+          ) : (
+            <span>⏷</span>
+          )}
+        </th>
+      );
+    });
+  };
 
   sortServers(key) {
     const sortFunction = {
@@ -70,22 +79,23 @@ export class Table extends React.Component {
 
   render() {
     if (!this.state.servers.length) {
-      return <div>Loading...</div>;
-    } else {
       return (
-        <div>
+        <React.Fragment>
+          {!this.state.errMessage && <div className="loading-message">Loading...</div>}
+          {this.state.errMessage && <div className="list-error-message">{this.state.errMessage}</div>}
+        </React.Fragment>
+      )
+    }
+      else {
+      return (
+        <div className="content-center">
           <h3>A List of Servers</h3>
           <table className="servers-table" border="1">
             <caption className="caption">
               Click on collumn header to sort data
             </caption>
             <thead>
-              <tr>
-                <Header
-                  data={this.state.servers[0]}
-                  onSort={(key) => this.sortServers(key)}
-                />
-              </tr>
+              <tr>{this.header()}</tr>
             </thead>
             <tbody>{getRowsData(this.state.servers)}</tbody>
           </table>
@@ -93,4 +103,4 @@ export class Table extends React.Component {
       );
     }
   }
-}
+};

@@ -8,13 +8,13 @@ export class LoginWindow extends React.Component {
     username: "",
     password: "",
     errMessage: null,
-  };
+  }
 
   handleChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
     });
-  };
+  }
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ export class LoginWindow extends React.Component {
         errMessage: error.message,
       });
     }
-  };
+  }
 
   loginForm() {
     return (
