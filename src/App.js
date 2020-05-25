@@ -4,8 +4,7 @@ import { Table } from "./list/ListView";
 import "./App.css";
 import { TokenProvider, TokenContext } from "./context/TokenContext";
 
-class App extends React.Component {
-  render() {
+const App = () => {
     return (
       <TokenProvider>
         <TokenContext.Consumer>
@@ -15,7 +14,6 @@ class App extends React.Component {
         </TokenContext.Consumer>
       </TokenProvider>
     );
-  }
 };
 
 export default App;
