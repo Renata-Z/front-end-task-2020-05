@@ -1,74 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import "./LoginView.css";
 import logo from "../images/logo.png";
 import { login } from "./tesonetAPI";
 
-export class LoginWindow extends React.Component {
-  state = {
-    username: "",
-    password: "",
-    errMessage: null,
-  };
+export const LoginWindow = ({ onLogin }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errMessage, setErrMessage] = useState("");
 
-  handleChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const loginData = {
-      username: this.state.username,
-      password: this.state.password,
+      username: username,
+      password: password,
     };
     try {
       const tokenObject = await login(loginData);
       const token = tokenObject.token;
-      this.props.onLogin(token);
+      onLogin(token);
     } catch (error) {
-      this.setState({
-        errMessage: error.message,
-      });
+      setErrMessage(() => error.message);
     }
   };
 
-  loginForm() {
-    return (
-      <div className="login-container">
-        <img className="image" src={logo} alt="logo" />
-        <p className="error-message">
-          {this.state.errMessage && this.state.errMessage}
-        </p>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            className="input-field"
-            type="text"
-            placeholder="Username"
-            required
-            autoFocus
-            autoComplete="on"
-            name="username"
-            value={this.state.username}
-            onChange={this.handleChange}
-          />
-          <input
-            className="input-field"
-            type="password"
-            placeholder="Password"
-            required
-            autoComplete="off"
-            name="password"
-            value={this.state.password}
-            onChange={this.handleChange}
-          />
-          <input className="button-submit" type="submit" value="Log in" />
-        </form>
-      </div>
-    );
-  }
-
-  render() {
-    return this.loginForm();
-  }
+  return (
+    <div className="login-container">
+      <img className="image" src={logo} alt="logo" />
+      <p className="error-message">{errMessage && errMessage}</p>
+      <form onSubmit={handleSubmit}>
+        <input
+          className="input-field"
+          type="text"
+          placeholder="Username"
+          required
+          autoFocus
+          autoComplete="on"
+          name="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          className="input-field"
+          type="password"
+          placeholder="Password"
+          required
+          autoComplete="off"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <input className="button-submit" type="submit" value="Log in" />
+      </form>
+    </div>
+  );
 };

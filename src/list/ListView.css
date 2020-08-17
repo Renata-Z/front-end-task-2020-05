@@ -1,3 +1,10 @@
+.servers-container {
+  /* height: 100%; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .servers-table {
   border: 1px solid #9094939d;
   border-collapse: collapse;

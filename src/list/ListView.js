@@ -1,112 +1,112 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./ListView.css";
 import { getServers } from "../login/tesonetAPI";
-import { TokenContext } from '../context/TokenContext';
+import { TokenContext } from "../context/TokenContext";
 
-const getKeys = (props) => {
-  const keys = Object.keys(props);
+const getKeys = (arr) => {
+  const keys = Object.keys(arr);
   return keys;
 };
 
-const getRowsData = (props) => {
-  const data = props;
-  return data.map((item) => {
+const getRowsData = (arr) => {
+  return arr.map((item) => {
     const col = getKeys(item);
     return (
       <tr key={item.name + item.distance}>
         {col.map((val) => {
           return <td key={val}>{item[val]}</td>;
-        })
-        }
+        })}
       </tr>
     );
   });
 };
 
-export class Table extends React.Component {
-  state = {
-    servers: [],
-    nameSortAsc: false,
-    distanceSortAsc: false,
-    errMessage: null,
-  };
+export const Table = () => {
+  const [servers, setServers] = useState([]);
+  const [nameSortAsc, setNameSortAsc] = useState(false);
+  const [distanceSortAsc, setDistanceSortAsc] = useState(false);
+  const [errMessage, setErrMessage] = useState(null);
 
-  static contextType = TokenContext;
+  const tokenContext = useContext(TokenContext);
 
-  async componentDidMount() {
-    let token = this.context.token;
-    try {
-      const data = await getServers(token);
-      this.setState({
-        servers: data,
-      });
-    } catch (error) {
-      this.setState({
-        errMessage: error.message,
-      });
-    }
-  }
-  
-  header = () => {
-    const keys = getKeys(this.state.servers[0]);
-    let classes = null;
-    return keys.map((key) => {
-      if (this.state[`${key}SortAsc`]) {
-        classes = "rotate";
-      };
+  useEffect(() => {
+    let token = tokenContext.token;
+    const fetchData = async (token) => {
+      try {
+        const data = await getServers(token);
+        setServers(data);
+      } catch (error) {
+        setErrMessage(error.message);
+      }
+    };
+    fetchData(token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const header = () => {
+    const headers = getKeys(servers[0]);
+    let classes;
+
+    return headers.map((el) => {
+      if (el === "name") {
+        nameSortAsc ? (classes = "rotate") : (classes = null);
+      }
+      if (el === "distance") {
+        distanceSortAsc ? (classes = "rotate") : (classes = null);
+      }
       return (
-        <th key={key} onClick={() => this.sortServers(key)}>
-          {key.toUpperCase()}
+        <th key={el} onClick={() => sortServers(el)}>
+          {el.toUpperCase()}
           <span className={classes}>⏷</span>
         </th>
       );
     });
-  }
+  };
 
-  sortServers(key) {
+  const sortServers = (key) => {
     const sortFunction = {
       name: (a, b) => a.name.localeCompare(b.name),
       distance: (a, b) => a.distance - b.distance,
     };
-    const dataCopy = [...this.state.servers];
-    const sortAsc = this.state[`${key}SortAsc`];
+    const dataCopy = [...servers];
     dataCopy.sort(sortFunction[key]);
-    if (sortAsc) {
-      dataCopy.reverse();
+    if (key === "name") {
+      if (nameSortAsc) {
+        dataCopy.reverse();
+      }
     }
-    this.setState({
-      servers: dataCopy,
-      [`${key}SortAsc`]: !sortAsc,
-    });
-  }
+    if (key === "distance") {
+      if (distanceSortAsc) {
+        dataCopy.reverse();
+      }
+    }
+    setServers(() => dataCopy);
+    key === "name"
+      ? setNameSortAsc(() => !nameSortAsc)
+      : setDistanceSortAsc(() => !distanceSortAsc);
+  };
 
-  render() {
-    if (!this.state.servers.length) {
-      return (
-        <>
-          {!this.state.errMessage && (
-            <div className="loading-message">Loading...</div>
-          )}
-          {this.state.errMessage && (
-            <div className="list-error-message">{this.state.errMessage}</div>
-          )}
-        </>
-      );
-    } else {
-      return (
-        <div>
-          <h3>A List of Servers</h3>
-          <table className="servers-table" border="1">
-            <caption className="caption">
-              Click on the collumn header to sort data
-            </caption>
-            <thead>
-              <tr>{this.header()}</tr>
-            </thead>
-            <tbody>{getRowsData(this.state.servers)}</tbody>
-          </table>
-        </div>
-      );
-    }
+  if (!servers.length) {
+    return (
+      <>
+        {!errMessage && <div className="loading-message">Loading...</div>}
+        {errMessage && <div className="list-error-message">{errMessage}</div>}
+      </>
+    );
+  } else {
+    return (
+      <div className="servers-container">
+        <h3>A List of Servers</h3>
+        <table className="servers-table" border="1">
+          <caption className="caption">
+            Click on the collumn header to sort data
+          </caption>
+          <thead>
+            <tr>{header()}</tr>
+          </thead>
+          <tbody>{getRowsData(servers)}</tbody>
+        </table>
+      </div>
+    );
   }
 };
